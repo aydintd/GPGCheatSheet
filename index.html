@@ -41,7 +41,7 @@
 
 <h1 id="gnupg-cheatsheet">GnuPG CheatSheet</h1>
 
-<p>| <a href="#gen-key">Anahtar Çifti Oluşturma</a> | <a href="#key-management">Anahtar Yönetimi</a> | <a href="#sign">İmza İşlemleri</a> |<br> 
+<p>| <a href="#gen-key">Key Pair Generation</a> | <a href="#key-management">Anahtar Yönetimi</a> | <a href="#sign">İmza İşlemleri</a> |<br> 
 | <a href="#encrypt-decrypt">Şifreleme/Deşifre Etme</a> | <a href="#keyserver">Anahtar Sunucusu</a> | <a href="#edit-key">Anahtar Düzenleme</a> | <br>
 | <a href="#smart-cards">Akıllı Kartlar</a> | <a href="#tips">İpuçları</a> |  <a href="#contributor">Katkı</a> | <a href="#license">Lisans</a> | <a href="#ref">Referans</a> | </p>
 
@@ -56,31 +56,36 @@
 <p><a id="gen-key"></a></p>
 
 
-
-<h4 id="anahtar-çifti-oluşturma">Anahtar Çifti Oluşturma</h4>
+<h4 id="keypair-gen">Keypair Generation</h4>
 
 <p><code>gpg --gen-key</code></p>
 
-<p>Anahtar çifti oluşturmak için kullanılır.</p>
+<p>Used to create gpg key pairs.</p>
 
-<p><strong>not</strong>: Bu noktadan sonra GnuPG, anahtar çiftinin nasıl oluşturulacağı ile ilgili seçenekler listeler.
-2 . adımda satır boş bırakılırsa gpg anahtarı öntanımlı olarak 2048 bit halde oluşturacaktır.
-Daha güvenli bir anahtar için 4096 bit seçilmeli. 3. adımda bulunan geçerlilik tarihi için ise; 
-1 veya 2 yıldan daha uzun bir süre seçmemek yine avantajlı olacaktır. <br>
+<p><strong>Note</strong>: Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values. </p>
+
+<p><code>gpg --full-generate-key</code></p>
+
+<p> Used to create the key pair with dialogs for all options </p> 
+<p><strong>Note</strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.
+It's been strongly advised that the expiration date also should not be set longer than 3 years. <br>
+
 ————————————————————————————</p>
 
-<p><code>gpg -ao iptal_sertifika.asc --gen-revoke key_id</code></p>
+<p><code>gpg -ao revocation.asc --gen-revoke key_id</code></p>
 
-<p>id’si belirtilen anahtar için, örn. “iptal_sertifika.asc” olarak ASCII zırlı biçimde iptal sertifikası oluşturur. <br>
+<p> Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directoryfor the specified key_id key. <br>
+
 ————————————————————————————</p>
 
 <p><code>gpg --import iptal_sertifika.asc </code></p>
 
-<p>örn. “iptal_sertifika.asc” adındaki iptal sertifikasını içe aktarır, böylece hangi anahtar için oluşturulduysa onu iptal eder.   </p>
+<p>Used to revoke the key by importing the revocation cert thus it's going to revoke the key which the revocated certificate's created for in the previous command. </p>
 
-<p><strong>not 0</strong>: İptal sertifikasını harici bir depolama alanında saklamak daha doğru olacaktır.  <br>
-<strong>not 1</strong>: Herhangi bir nedenle anahtarınızı iptal ettiyseniz, anahtarı kullanacak olan kişilerin de bunu bilmesi gerekir. Eğer sunucu kullanıyorsanız, iptal etmiş olduğunuz anahtarı tekrar 
-sunucuya göndererek (<a href="#send-keys">–send-keys</a>) bunu sağlayabilirsiniz. <br></p>
+<p><strong>not 0</strong>: It's gonna be wise to store this revocation cert on an another media. <br>
+<strong>not 1</strong>: If you ever revoked your key just because for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.
+If you use keyservers to publish your keys, you can send your revoked key to the keyserver back and make sure people aware the revocation.
+For more info, refer: (<a href="#send-keys">–send-keys</a>)  <br></p>
 <hr>
 
 <h4 id="anahtar-yönetimi">Anahtar Yönetimi<a id="key-management"></a></h4>
