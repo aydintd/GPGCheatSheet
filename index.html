@@ -41,7 +41,7 @@
 
 <h1 id="gnupg-cheatsheet">GnuPG CheatSheet</h1>
 
-<p>| <a href="#gen-key">Key Pair Generation</a> | <a href="#key-management">Anahtar Yönetimi</a> | <a href="#sign">İmza İşlemleri</a> |<br> 
+<p>| <a href="#gen-key">Key Pair Generation</a> | <a href="#key-mgmt">Key Management</a> | <a href="#sign">İmza İşlemleri</a> |<br> 
 | <a href="#encrypt-decrypt">Şifreleme/Deşifre Etme</a> | <a href="#keyserver">Anahtar Sunucusu</a> | <a href="#edit-key">Anahtar Düzenleme</a> | <br>
 | <a href="#smart-cards">Akıllı Kartlar</a> | <a href="#tips">İpuçları</a> |  <a href="#contributor">Katkı</a> | <a href="#license">Lisans</a> | <a href="#ref">Referans</a> | </p>
 
@@ -62,12 +62,13 @@
 
 <p>Used to create gpg key pairs.</p>
 
-<p><strong>Note</strong>: Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values. </p>
+<p><strong>note 0</strong>: Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values. </p>
 
 <p><code>gpg --full-generate-key</code></p>
 
 <p> Used to create the key pair with dialogs for all options </p> 
-<p><strong>Note</strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.
+
+<p><strong>note 0 </strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.
 It's been strongly advised that the expiration date also should not be set longer than 3 years. <br>
 
 ————————————————————————————</p>
@@ -82,40 +83,40 @@ It's been strongly advised that the expiration date also should not be set longe
 
 <p>Used to revoke the key by importing the revocation cert thus it's going to revoke the key which the revocated certificate's created for in the previous command. </p>
 
-<p><strong>not 0</strong>: It's gonna be wise to store this revocation cert on an another media. <br>
-<strong>not 1</strong>: If you ever revoked your key just because for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.
-If you use keyservers to publish your keys, you can send your revoked key to the keyserver back and make sure people aware the revocation.
+<p><strong>note 0</strong>: It's gonna be wise to store this revocation cert on an another media. <br>
+<strong>note 1</strong>: If you ever revoked your key for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.
+If you use keyservers, you can send your revoked key to the keyserver back and make sure people aware the revocation.
 For more info, refer: (<a href="#send-keys">–send-keys</a>)  <br></p>
 <hr>
 
-<h4 id="anahtar-yönetimi">Anahtar Yönetimi<a id="key-management"></a></h4>
+<h4 id="key-mgmt">Key Management<a id="key-management"></a></h4>
 
 <p><code>gpg --list-secret-keys</code></p>
 
-<p>Kayıtlı özel anahtarları ve ilgili ayrıntıları (key id, son kullanma tarihi, vs.) listeler <br>
+<p>Used to list registered gpg secret keys and details such as key id, expiration date etc. <br>
 ————————————————————————————</p>
 
 <p><code>gpg --list-keys</code></p>
 
-<p>Kayıtlı genel anahtarları ve ilgili aytıntıları (key id, son kullanma tarihi, vs.) listeler <br>
+<p>Used to list registered gpg public keys and details such as key id, expiration date etc. <br>
 ————————————————————————————</p>
 
 <p><code>gpg --fingerprint</code></p>
 
-<p>Anahtarlara ait parmak izlerini (fingerprint) listeler.  <br>
+<p>Used to list the fingerprint information of the imported keys. <br>
 ————————————————————————————</p>
 
-<p><code>gpg --delete-secret-key "kullanici_adi/key_id"</code></p>
+<p><code>gpg --delete-secret-key "username/key_id"</code></p>
 
-<p>Belirtilen key id veya kullanıcı adına ait özel anahtarı siler. <br>
+<p>Used to delete the secret key and the defined username by specifying the key_id.  <br>
 ————————————————————————————</p>
 
-<p><code>gpg --delete-key "kullanici_adi"</code></p>
+<p><code>gpg --delete-key "username"</code></p>
 
-<p>Belirtilen key id veya kullanıcı adına ait genel anahtarı siler.</p>
+<p>Used to delete the public key associated with the username.</p>
 
-<p><strong>not:</strong> Bu komut belirtilen kullanıcı adına ait bir özel anahtar olmadığında kullanılabilir.
-Aksi ihtimalde önce bir üstte bulunan komutu kullanarak özel anahtarı silmeniz gerekir. <br>
+<p><strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
+Otherwise; you should first delete the secret key prior deleting the public key.  <br>
 ————————————————————————————</p>
 
 <p><code>gpg -ao ozel_anahtar.asc --export-secret-keys "anahtar_id"</code></p>
