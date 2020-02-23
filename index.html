@@ -94,6 +94,7 @@
   
   <div class="topnav">
     <a href="#keypair-gen">Key Pair Generation</a> 
+    <a href="#key-mgmt">Key Management</a> 
     <a href="#sign-ops">Sign Operations</a> 
     <a href="#encrypt-decrypt">Encryption/Decryption</a> 
     <a href="#keyserver">Key Servers</a>
@@ -199,72 +200,72 @@
   
   <h4 id="sign-ops">Sign Operations<a id="sign"></a></h4>
   
-  <p><code> gpg --clearsign mesaj.txt</code></p>
+  <p><code> gpg --clearsign message</code></p>
   
-  <p>İmzayı metin/mesaj dosyasının içine yazdırır.
-  örn. “mesaj.txt” dosyasını “mesaj.txt.asc” olarak ASCII zırlı biçimde dışarı aktarır. </p>
+  <p>Used to print the signature into the file "message" and export the message.asc ASCII-armored PGP signed file.</p>
   
-  <p><code>gpg --verify mesaj.txt.asc</code></p>
+  <p><code>gpg --verify message.asc</code></p>
   
-  <p>Çıktı olarak; imzanın tarih detaylarını, imzalayanın anahtar id’sini ve doğrulama bilgisi ile birlikte imzalayanın kullanıcı bilgilerini verir. <br>
+  <p>Used to output signature owner, date, key id and verification info used on message.txt.asc file ASCII-armored PGP signed file. <br>
   ————————————————————————————</p>
   
-  <p><code>gpg --armor --detach-sign dosya.*</code></p>
+  <p><code>gpg --armor --detach-sign file</code></p>
   
-  <p>örn. “dosya.* ” dosyasını imzalar, imza dosyasını “dosya.*.asc” olarak ASCII zırlı biçimde dışarı aktarır.</p>
+  <p>Used to sign file, export the file.asc ASCII-armored file in the working directory. </p>
   
-  <p><code>gpg --armor --detach-sign dosya.*.asc  dosya.*</code></p>
-  
-  <p>Çıktı olarak; imzanın tarih detaylarını, imzalayanın anahtar id’sini ve doğrulama bilgisi ile birlikte imzalayanın kullanıcı bilgilerini verir. <br>
   ————————————————————————————</p>
   
-  <p><code>gpg --detach-sign dosya.*</code></p>
+  <p><code>gpg --detach-sign file</code></p>
   
-  <p>örn. “dosya.* ” dosyasını imzalar ve imza dosyasını “dosya.*.sig” olarak dışarı aktarır.</p>
+  <p>Used to sign file and export file.sign data file in the working directory.</p>
   
-  <p><code>gpg --detach-sign dosya.*.sig dosya.*</code></p>
+  <p><code>gpg -d file.sign</code></p>
   
-  <p>Çıktı olarak; imzanın tarih detaylarını, imzalayanın anahtar id’sini ve doğrulama bilgisi ile birlikte imzalayanın kullanıcı bilgilerini verir. <br>
+  <p>Used to output signature owner, date, key_id and verification info.<br> <br>
+    gpg: assuming signed data in 'file.txt.sign'<br>
+    gpg: Signature made Sun 23 Feb 2020 09:27:48 PM UTC<br>
+    gpg:                using RSA key F7EFBA655EA35506008E0F836B73D524F084D782<br>
+    gpg: Good signature from "Aydin Doyak (aydintd;https://aydintd.net) <info@aydintd.net>" [ultimate]<br>
   ————————————————————————————</p>
   
-  <p><code>gpg --output dosya.sig --sign dosya</code></p>
+  <p><code>gpg --output file.sig --sign file</code></p>
   
-  <p>örn. dosyayı imzalar ve “dosya.sig” olarak dışarı aktarır.</p>
+  <p>Used to sign the file and export the signed file.sig in the working directory.</p>
   
-  <p><code>gpg --output dosya --decrypt dosya.sig</code></p>
+  <p><code>gpg --output file --decrypt file.sig</code></p>
   
-  <p>Çıktı olarak; imzanın tarih detaylarını, imzalayanın anahtar id’sini ve doğrulama bilgisi ile birlikte imzalayanın kullanıcı bilgilerini verir. <br></p>
+  <p>Used to output the signature owner, date, key id, verification info and export the signed "file" in the working directory. <br></p>
   <hr>
   
+  <h4 id="encrypt-decrypt">Encryption-Decryption<a id="encr-decry"></a></h4>
   
+  <p><code>gpg -e -u "x@domain.com" -r "y@domain.net" file</code></p>
   
-  <h4 id="şifreleme-deşifre-etme">Şifreleme-Deşifre Etme<a id="encrypt-decrypt"></a></h4>
-  
-  <p><code>gpg -e -u "x@e-posta.com" -r "y@e-posta.com" dosya.*</code></p>
-  
-  <p>Gönderen (x@e-posta.com) tarafından, örn. “dosya.*” dosyasını
-  alıcı (y@e-posta.com) için şifreler ve dosya.*.gpg olarak dışarı aktarır. <br>
+  <p>Used to encrypt the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
+  and export the encrypted file.gpg in the working directory.<br>
   ————————————————————————————</p>
   
-  <p><code>gpg -e -u "x@e-posta.com" -r "y@e-posta.com" --sign dosya.*</code></p>
+  <p><code>gpg -e -u "x@domain.net" -r "y@domain.com" --sign file</code></p>
   
-  <p>Gönderen (gonderen@e-posta.com) tarafından, örn. “dosya.*” dosyasını
-  alıcı (alan@e-posta.com) için şifreler ve imzalar. dosya.*.gpg olarak dışarı aktarır.</p>
+  <p>Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
+  and export the encrypted and signed file.gpg file in the working directory.</p>
   
-  <p><code>gpg -e -r y@e-posta.com --sign dosya.*</code></p>
+  <p><code>gpg -e -r y@domain.com --sign file</code></p>
   
-  <p>Öntanımlı özel anahtarınız ile örn. “dosya.*” dosyasını, alıcı (y@e-posta.com) için şifreler.</p>
+  <p>Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <strong>default</strong> gpg key in your keychain
+  and export the encrypted file in the working directory.</p>
   
   <p>————————————————————————————</p>
   
-  <p><code>gpg -d dosya.txt.gpg</code></p>
+  <p><code>gpg -d file.gpg</code></p>
   
-  <p>Şifreli dosyayı (örn. dosya.txt.gpg) deşifre eder ve  yazdırır. <br>
+  <p>Used to decrypt encrypted file.gpg and prints out the output. <br>
   ————————————————————————————</p>
   
-  <p><code>gpg -o dosya.* -d dosya.*.gpg</code></p>
+  <p><code>gpg -o file.ext -d file</code></p>
   
-  <p>Şifreli dosyayı (örn. dosya.*.gpg) deşifre eder ve belirtilen ad-tür ile dışa aktarır. <br></p>
+  <p>Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br></p>
+  
   <hr>
   
   <h4 id="anahtar-sunucusu">Anahtar Sunucusu<a id="keyserver"></a></h4>
