@@ -101,7 +101,7 @@
     <a href="#key-edit">Key Editing</a>
     <a href="#smart-cards">Smart Cards</a>
     <a href="#tips">Tips</a>
-    <a href="#contributor" style="float:right">Contribution</a>
+    <a href="#contribution" style="float:right">Contribution</a>
     <a href="#license" style="float:right">License</a>
     <a href="#ref" style="float:right">Reference</a>
   </div>
@@ -340,111 +340,100 @@
   
   
   
-  <h4 id="akıllı-kartlar-k2">Akıllı Kartlar [<a href="#cont-2" title="Arda Kılıçdağı">k2</a>] <a id="smart-cards"></a></h4>
+  <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
   
   <p><code>gpg --card-edit</code></p>
   
-  <p>Cihaza bağlı olan (örn. yubikey, vb.) akıllı kartlara müdahale etmenizi sağlar.</p>
+  <p> Used to manipulate smart cards connected to the device. (yubikey, etc) </p>
   
-  <p><strong>not</strong>: Bu noktada gpg aracı, bağlı olan akıllı kartla iletişime girer. Ardından aşağıdaki
-  komutlar uygulanarak kart üzerinde düzenlemeler yapılır.  <br>
+  <p><strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br>
   ————————————————————————————</p>
   
   <p><code>admin</code></p>
   
-  <p>Kart menüsü içerisinde, yönetici haklarına erişim sağlayarak, akıllı kart içindeki “genel anahtar bağlantsı”, “kart sahibi” gibi bilgileri düzenlemek için kullanılır. <br>
+  <p>Used to get privileged by accessing the admin rights, it allows you to change "key connection, key owner etc." information inside the smart card menu.<br>
   ————————————————————————————</p>
   <p><code>name</code></p>
   
-  <p>Akıllı kart sahibinin, ad-soyad bilgilerini düzenlemek için kullanılır. <br>
+  <p>Used to change the full name information for the owner of the smart card.<br>
   ————————————————————————————</p>
   
   <p><code>url</code></p>
   
-  <p>Akıllı kart içerisinde genel anahtar bağlantısını tanımlamak için kullanılır. <br>
+  <p>Used to define key connection url path.<br>
   ————————————————————————————</p>
   
   <p><code>generate</code></p>
   
-  <p>Yeni anahtar çifti oluşturmak için kullanılır.  <br>
+  <p>Used to generate a new key pair for the device.<br>
   ————————————————————————————</p>
   
   <p><code>toggle</code></p>
   
-  <p>Listeleme aşamasında genel ve özel anahtarların yer değişimi için kullanılır.  <br>
+  <p>Used to toggle keys during listing phase. <br>
   ————————————————————————————</p>
   
-  <p><code>key numara</code></p>
+  <p><code>key number</code></p>
   
-  <p>Girilen numara ile alt-anahtarlara işlem yapmak için, numarası belirtilen anahtar işaretlenir.
-  Örn. sırayla key 1, key 2, key 1 derseniz; önce birinci anahtar  ardından 2. anahtar işaretlenir, son olarak 1. anahtarın işareti kalkar. <br>
+  <p>Used to mark the gpg keys by numbering them in the smart card.<br></p>
   ————————————————————————————</p>
   
   <p><code>keytocard</code></p>
   
-  <p>Seçilen anahtarların akıllı karta aktarılması için kullanılır. <br>
+  <p>Used to transfer marked keys to the device. <br>
   ————————————————————————————</p>
   
   <p><code>save</code></p>
   
-  <p>Değişiklikleri kaydedip çıkmak için kullanılır. <br>
+  <p>Used to save the changes and exit. <br>
   ————————————————————————————</p>
   
   <p><code>quit</code></p>
   
-  <p>Değişiklikleri kaydetmeden çıkmak için kullanılır. <br></p>
+  <p>Escape. <br></p>
   <hr>
   
+  <h3 id="tips">Tips<a id="tips"></a></h3>
   
-  
-  <h3 id="ipuçları">İpuçları<a id="tips"></a></h3>
-  
-  <p>Anahtar çiftinizin oluşturulma sürecinde daha fazla entropy oluşturmak için rng-tools’u<a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">1</a> kullanabilirsiniz. </p>
-  
-  <p>örn.  <br><br>
+  <p>During key generation, rng-tools <a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">[1]</a> can be used to increase the entropy in your operating system. </p>
+  <p><strong>Example</strong> <br><br>
   <code>sudo rngd -r /dev/urandom</code> <br><br>
   ————————————————————————————</p>
   
-  <p>[<a href="#cont-1" title="Samed Beyribey">k1</a>]Her seferinde anahtar sunucusu belirtmemek ve encoding sorunu yaşamamak için "~/.gnupg/gpg.conf" dosyasına aşağıdaki eklemeleri yapabilirsiniz.</p>
+  <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to prevent specifiying the keyserver every time and encoding problems, 
+  below configuration can be added to <i>"~/.gnupg/gpg.conf"</i> for your UNIX user.</p>
   
-  <p><code>utf8-strings</code> <br><br>
-  <code>keyserver  sunucu_url</code> <br><br>
+  <p><code>utf8-strings</code><br>
+  <code>keyserver server_url</code> <br><br>
   ————————————————————————————</p>
   
-  <p>[<a href="#cont-1" title="Samed Beyribey">k1</a>]Gpg parolanızı(passphrase) belirli bir süre hafızada tutmak için (örn. 12 saat, saniye cinsinden) "~/.gnupg/gpg-agent.conf" aşağıdaki biçimde ekleme yapabilirsiniz.</p>
+  <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to define a TTL value for your key's passphrase, below configuration can be added to <i>"~/.gnupg/gpg-agent.conf"</i> file in seconds.</p>
   
   <p><code>
-  default-cache-ttl 43200</code> <br><br>
+  default-cache-ttl 43200</code> <br>
   <code>max-cache-ttl 43200</code> <br><br>
-  <br></p>
+  </p>
   <hr>
   
-  
-  
-  <h4 id="referans">Referans<a id="ref"></a></h4>
+  <h4 id="ref">Referance<a id="ref"></a></h4>
   
   <p>The GNU Privacy Guard Manual: <a href="https://www.gnupg.org/documentation/manuals/gnupg/">https://www.gnupg.org/documentation/manuals/gnupg/</a></p>
-  
   <p>The GnuPG Smartcard HOWTO: <a href="https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html">https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html</a></p>
   
-  <p><a id="contributor"></a></p>
+  <h4 id="contribution">Contribution</h4>
   
-  <h4 id="katkı">Katkı</h4>
+
+  <ul style="list-style-type:none;">
+    <li><a> Aydın Doyak   -- </a><a href="https://aydintd.net">aydintd.net</a></li>
+    <li><a> Barış Büyükakyol -- </a><a href="http://usrb.in">usrb.in </a><br></li>
+    <li><a id="cont-1"></a>Samed Beyribey[c1] -- <a href="https://eventualis.org">eventualis.org</a><br></li>
+    <li><a id="cont-2"></a>Arda Kılıçdağı[c2] -- <a href="https://arda.kilicdagi.com">arda.kilicdagi.com</a> </p></li>
+  </ul>  
   
-  <p>Barış Büyükakyol -- <a href="http://usrb.in">usrb.in </a><br>
-  <a id="cont-1"></a>Samed Beyribey[k1]  -- <a href="https://eventualis.org">eventualis.org</a><br>
-  <a id="cont-2"></a>Arda Kılıçdağı[k2] -- <a href="https://arda.kilicdagi.com">arda.kilicdagi.com</a> </p>
+  <h4 id="license">License</h4>
   
-  <p><a id="license"></a></p>
-  
-  <h4 id="lisans">Lisans</h4>
-  
-  <p>Bu döküman GNU Free Documentation License v1.3 altındadır.  <br>
-  Lisans metni: <a href="https://www.gnu.org/licenses/fdl.html">eng</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">tr</a></p>
-  
-  
-  
-  <h4 id="bağlantılar">Bağlantılar</h4>
+  <p>GNU Free Documentation License v1.3<br>
+  LICENSE text: <a href="https://www.gnu.org/licenses/fdl.html">eng</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">tr</a></p>
   
   <div class="footnotes"><hr><ol><li id="fn:rng-tools">Random Number Generator Tools <a href="https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html">https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html</a> <a href="#fnref:rng-tools" title="Return to article" class="reversefootnote">↩</a></li></ol></div>
 </div>
