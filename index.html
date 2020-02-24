@@ -98,7 +98,7 @@
     <a href="#sign-ops">Sign Operations</a> 
     <a href="#encrypt-decrypt">Encryption/Decryption</a> 
     <a href="#keyserver">Key Servers</a>
-    <a href="#edit-key">Key Editing</a>
+    <a href="#key-edit">Key Editing</a>
     <a href="#smart-cards">Smart Cards</a>
     <a href="#tips">Tips</a>
     <a href="#contributor" style="float:right">Contribution</a>
@@ -125,9 +125,7 @@
   
   <p><code>gpg -ao revocation.asc --gen-revoke key_id</code></p>
   
-  <p>Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directoryfor the specified key_id key.<br>
-  
-  ————————————————————————————</p>
+  <p>Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directory for the specified key_id key.<br>
   
   <p><code>gpg --import revocation.asc </code></p>
   
@@ -268,73 +266,76 @@
   
   <hr>
   
-  <h4 id="anahtar-sunucusu">Anahtar Sunucusu<a id="keyserver"></a></h4>
+  <h4 id="key-server">Key Server<a id="keyserver"></a></h4>
   
-  <p><a id="send-keys"></a><code>gpg --keyserver sunucu_url --send-keys key_id</code></p>
+  <p><a id="send-keys"></a><code>gpg --keyserver server_url --send-keys key_id</code></p>
   
-  <p>id’si belirtilen anahtarı istenen anahtar sunucusuna gönrerir. <br>
+  <p>Used to send the key_id gpg public key to the server_url keyserver. <br>
   ————————————————————————————</p>
   
-  <p><code>gpg --keyserver sunucu_url --recv-key key_id</code></p>
+  <p><code>gpg --keyserver server_url --recv-key key_id</code></p>
   
-  <p>id’si belirtilen anahtarı istenen anahtar sunucusundan çeker.  <br>
+  <p>Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
   ————————————————————————————</p>
   
-  <p><code>gpg --keyserver sunucu_url  --search-keys arama_parametresi</code></p>
+  <p><code>gpg --keyserver server_url  --search-keys search-parameter</code></p>
   
-  <p>Tercih edilen arama parametresine göre, belirtilen anahtar sunucusundan, genel anahtarı/anahtarları numaralandırarak listeler. Girilen numara ile istenen anahtarı çeker.  <br></p>
+  <p>Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br></p>
   <hr>
   
-  
-  
-  <h4 id="anahtar-düzenleme">Anahtar Düzenleme<a id="edit-key"></a></h4>
+  <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4>
   
   <p><code>gpg --edit-key key_id</code></p>
   
-  <p>id’si belirtilen anahtar ile ilgili belirli düzenlemeler yapmak için kullanılır.</p>
+  <p>Used to manipulate the key specified by the key_id. There are some example commands above which can be interactively instructed after running --edit-key. </p>
   
-  <p>Bu noktada id’si belirtilen anahtar için aşağıdaki komutlar uygulanarak bir takım düzenlemeler yapılabilir. <br>
-  Eğer bir anahtar sunucusu kullanılıyorsa, <strong>genel anahtarlar</strong> (duruma göre sizin veya başkasının) üzerinde yapmış olduğunuz değişikliklerin bilinmesi için kaydettikten sonra (<a href="#save">save</a>)  tekrar sunucuya göndermeniz (<a href="#send-keys">–send-keys</a>) gerekir.  <br>
+  <p>After <strong><a href="#save">save</a>ing</strong> your modifications for the key, if there's any keyserver used, yours or any other's modified gpg key<br>
+  should be encouraged to <a href="#send-keys">–send-keys</a> back to keyserver again to inform people about the newly changes. <br><br>
+
   ————————————————————————————</p>
   
   <p><code>passwd</code></p>
   
-  <p>Belirtilen özel anahtarın passphrase(parola)’ini değiştirmek için kullanılır. <br>
+  <p>Used to change the passphrase for the specified key. <br>
   ————————————————————————————</p>
   
   <p><code>sign</code> </p>
   
-  <p>Belirtilen anahtarı imzalamak için kullanılır.</p>
+  <p>Used to sign gpg public keys</p>
   
-  <p><strong>not</strong>: İmzaladığınız anahtar; ana anahtarınız, size ait bir alt-anahtar veya bir başkasının anahtarı olabilir.  Bir başkasının anahtarını imzaladığınız durumda, kaydedip (<a href="#save">save</a>) anahtarı sunucuya geri gönderirseniz(<a href="#send-keys">–send-keys</a>), bu imza anahtara ait ayrıntılarda görüntülenecektir. Böylece anahtar üzerinde belitrilen hesabın doğru yani e-posta hesabının ve adın gerçek sahibine ait olduğuna dair bir referans oluşturacak.  Bu nedenle; <strong>kişisel olarak  tanışıp, mevcut anahtarın tanıştığınız kişiye ait olduğunu doğrulamadığınız kimselerin anahtarlarını imzalamayınız.</strong>  <br>
+ <p>
+ <strong>note 0</strong> Keys you sign can be your own key, another gpg key from your keyring or someone else's public key. If you sign someone else's key,<a href="#save">save</a> it and (<a href="#send-keys">–send-keys</a>) back to a keyserver,<br>
+ <strong>note 1</strong> This sign procedure will be visible in the key details in case of public keyserver querying. So after saving and sending the key back to a keyserver,
+  you will be considered as you accept the owner of the key who has the defined e-mail address, in other words; real person who has access to the defined email address in the gpg key details.<br>
+ <strong>note 2</strong> Consider whose key to sign and whose don't. It's highly discouraged to sign a key which you do not know the owner in real life. Do not trust any presence claim in the outer wild.</p>
   ————————————————————————————</p>
   
   <p><code>expire</code></p>
   
-  <p>Anahtarınızın/anahtarlarınızın kullanım tarihini değiştirmek için kullanılır. <br>
+  <p>Used to reset expiration date for the specified key.<br>
   ————————————————————————————</p>
   
   <p><code>addphoto</code></p>
   
-  <p>Belirtilen anahtara görsel eklemek için kullanılır.</p>
+  <p>Used to add an image to the specified key</p>
   
-  <p><strong>not 1</strong> : Görsel jpg formatında ve 240x288px’den büyük olmamalıdır.  <br>
-  <strong>not 2</strong>: Her anahtar sunucuları bu biçimdeki anahtarları kabul etmez. <br>
+  <p><strong>note 0</strong> Image must be in jpg format and image size must not be bigger than 240x288px  <br>
+  <strong>note 1</strong> There's no guarantee that every keyserver recognizes this form of keys. <br>
   ————————————————————————————</p>
   
   <p><code>showphoto</code></p>
   
-  <p>Eğer anahtara görsel eklenmişse bu görseli görüntülemek için kullanılır. <br>
+  <p>Used to display the image if any attached to the key. <br>
   ————————————————————————————</p>
   
   <p><a id="save"></a><code>save</code></p>
   
-  <p>Değişiklikleri kaydedip çıkmak için kullanılır. <br>
+  <p>Used to save the changes and exit. <br>
   ————————————————————————————</p>
   
   <p><code>quit</code></p>
   
-  <p>Değişiklikleri kaydetmeden çıkmak için kullanılır. <br></p>
+  <p>Used to escape without saving. <br></p>
   <hr>
   
   
