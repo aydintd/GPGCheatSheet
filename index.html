@@ -7,21 +7,20 @@
     <meta name="author" content="Aydin Doyak">
     <meta name="description" content="GNU Privacy Guard CheatSheet">
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
 
     <title>GnuPG CheatSheet</title>
-
     <div class="container-fluid">
-      <nav class="navbar navbar-expand-md navbar-light bg-light monospace">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light monospace">
         <a class="navbar-brand" href="#">GnuPG CheatSheet</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="#collapsibleNavbar">
-          <ul class="navbar-nav">
+          <ul class="navbar-nav mr-auto">
             <li class="nav-item">
               <a class="nav-link" href="#keypair-gen">Key Pair Generation</a> 
             </li>
@@ -44,16 +43,17 @@
               <a class="nav-link" href="#tips">Tips</a>
             </li>
           </ul>
-        </div>
-        <div class="dropdown">
-          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-            FAQ
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdownitem" href="#contribution">Contribution</a><br>
-            <a class="dropdownitem" href="#license">License</a><br>
-            <a class="dropdownitem" href="#reference">Reference</a>
-          </div>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#contribution">Contribution</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#license">License</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#ref1">Reference</a>
+            </li>
+          </ul>
         </div>
       </nav>
     </div>
@@ -61,10 +61,10 @@
   <body>
     <div class="container-fluid p-5">
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="background-color:lavender;">
           <h4 id="keypair-gen">Keypair Generation</h4>
           <p class="monospace">
-            <pre><code>gpg --gen-key</code></pre><br>
+            <pre><code>gpg --gen-key</code></pre>
             Used to create gpg key pairs.<br><br>
             <strong>note 0</strong> Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values.<br><br>
             <pre><code>gpg --full-generate-key</code></pre><br>
@@ -93,7 +93,6 @@
             Used to decrypt encrypted file.gpg and prints out the output. <br>
             <pre><code>gpg -o file.ext -d file</code></pre>
             Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br>
-          </p>
           <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4>
             <pre><code>gpg --edit-key key_id</code></pre>
             Used to manipulate the key specified by the key_id. There are some example commands above which can be interactively instructed after running --edit-key. 
@@ -119,6 +118,7 @@
             Used to save the changes and exit. <br>
             <pre><code>quit</code></pre>
             Used to escape without saving. <br>
+          </p>
         </div>
         <div class="col-sm-4">
           <h4 id="key-mgmt">Key Management<a id="key-management"></a></h4>
@@ -175,7 +175,7 @@
             <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.<br>
           </p>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm-4" style="background-color:lavenderblush;">
           <h4 id="sign-ops">Sign Operations<a id="sign"></a></h4>
             <p class="monospace">
             <pre><code> gpg --clearsign message</code></pre>
@@ -194,130 +194,74 @@
             gpg:                using RSA key F7EFBA655EA35506008E0F836B73D524F084D782
             gpg: Good signature from "Aydin Doyak (aydintd;https://aydintd.net) <info@aydintd.net>" [ultimate]</code></pre> 
             <pre><code>gpg --output file.sig --sign file</code></pre>
-            Used to sign the file and export the signed file.sig in the working directory.<br>
+            Used to sign the file and export the signed file.sig in the working directory.<br><br>
             <pre><code>gpg --output file --decrypt file.sig</code></pre><br>
             Used to output the signature owner, date, key id, verification info and export the signed "file" in the working directory. <br><br>
             <h4 id="key-server">Key Server<a id="keyserver"></a></h4>
-              <a id="send-keys"></a><pre><code>gpg --keyserver server_url --send-keys key_id</code></pre>
-              Used to send the key_id gpg public key to the server_url keyserver. <br>
-              <pre><code>gpg --keyserver server_url --recv-key key_id</code></pre>
-              Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
-              <pre><code>gpg --keyserver server_url  --search-keys search-parameter</code></pre>
-              Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br>
+            <a id="send-keys"></a><pre><code>gpg --keyserver server_url --send-keys key_id</code></pre>
+            Used to send the key_id gpg public key to the server_url keyserver. <br>
+            <pre><code>gpg --keyserver server_url --recv-key key_id</code></pre>
+            Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
+            <pre><code>gpg --keyserver server_url  --search-keys search-parameter</code></pre>
+            Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br><br>
+            <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
+            <pre><code>gpg --card-edit</code></pre>
+            Used to manipulate smart cards connected to the device. (yubikey, etc) 
+            <strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br><br>
+            <pre><code>admin</code></pre>
+            Used to get privileged by accessing the admin rights, it allows you to change "key connection, key owner etc." information inside the smart card menu.<br><br>
+            <pre><code>name</code></pre>
+            Used to change the full name information for the owner of the smart card.<br><br>
+            <pre><code>url</code></pre>
+            Used to define key connection url path.<br><br>
+            <pre><code>generate</code></pre>
+            Used to generate a new key pair for the device.<br><br>
+            <pre><code>toggle</code></pre>
+            Used to toggle keys during listing phase.<br> <br>
+            <pre><code>key number</code></pre>
+            Used to mark the gpg keys by numbering them in the smart card.<br><br>
+            <pre><code>keytocard</code></pre>
+            Used to transfer marked keys to the device. <br><br>
+            <pre><code>save</code></pre>
+            Used to save the changes and exit. <br><br>
+            <pre><code>quit</code></pre>
+            Escape. <br><br>
+            <h4 id="tips">Tips<a id="tips"></a></h3>
+            During key generation, rng-tools <a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">[1]</a> can be used to increase the entropy in your operating system. 
+            <strong>Example</strong> <br><br>
+            <pre><code>sudo rngd -r /dev/urandom</code></pre> 
+            [<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to prevent specifiying the keyserver every time and encoding problems, 
+            below configuration can be added to <i>"~/.gnupg/gpg.conf"</i> for your UNIX user.<br><br>
+            <pre><code>utf8-strings<br>keyserver server_url</code></pre> 
+            [<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to define a TTL value for your key's passphrase, 
+            below configuration can be added to <i>"~/.gnupg/gpg-agent.conf"</i> file in seconds.<br><br>
+            <pre><code>default-cache-ttl 43200<br>max-cache-ttl 43200</code></pre> <br>
             </p>
         </div>
       </div>
     </div>
-    
-       <hr>
-    
-    
-    
-    <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
-    
-    <p><pre><code>gpg --card-edit</code></pre>
-    
-    <p> Used to manipulate smart cards connected to the device. (yubikey, etc) 
-    
-    <p><strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br>
-    ————————————————————————————
-    
-    <p><pre><code>admin</code></pre>
-    
-    <p>Used to get privileged by accessing the admin rights, it allows you to change "key connection, key owner etc." information inside the smart card menu.<br>
-    ————————————————————————————
-    <p><pre><code>name</code></pre>
-    
-    <p>Used to change the full name information for the owner of the smart card.<br>
-    ————————————————————————————
-    
-    <p><pre><code>url</code></pre>
-    
-    <p>Used to define key connection url path.<br>
-    ————————————————————————————
-    
-    <p><pre><code>generate</code></pre>
-    
-    <p>Used to generate a new key pair for the device.<br>
-    ————————————————————————————
-    
-    <p><pre><code>toggle</code></pre>
-    
-    <p>Used to toggle keys during listing phase. <br>
-    ————————————————————————————
-    
-    <p><pre><code>key number</code></pre>
-    
-    <p>Used to mark the gpg keys by numbering them in the smart card.<br>
-    ————————————————————————————
-    
-    <p><pre><code>keytocard</code></pre>
-    
-    <p>Used to transfer marked keys to the device. <br>
-    ————————————————————————————
-    
-    <p><pre><code>save</code></pre>
-    
-    <p>Used to save the changes and exit. <br>
-    ————————————————————————————
-    
-    <p><pre><code>quit</code></pre>
-    
-    <p>Escape. <br>
-    <hr>
-    
-    <h3 id="tips">Tips<a id="tips"></a></h3>
-    
-    <p>During key generation, rng-tools <a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">[1]</a> can be used to increase the entropy in your operating system. 
-    <p><strong>Example</strong> <br><br>
-    <pre><code>sudo rngd -r /dev/urandom</code></pre> <br><br>
-    ————————————————————————————
-    
-    <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to prevent specifiying the keyserver every time and encoding problems, 
-    below configuration can be added to <i>"~/.gnupg/gpg.conf"</i> for your UNIX user.
-    
-    <p><pre><code>utf8-strings</code></pre><br>
-    <pre><code>keyserver server_url</code></pre> <br><br>
-    ————————————————————————————
-    
-    <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to define a TTL value for your key's passphrase, below configuration can be added to <i>"~/.gnupg/gpg-agent.conf"</i> file in seconds.
-    
-    <p><pre><code>
-    default-cache-ttl 43200</code></pre> <br>
-    <pre><code>max-cache-ttl 43200</code></pre> <br><br>
-    
-    <hr>
-    
-    <h4 id="ref">Referance<a id="ref"></a></h4>
-    
-    <p>The GNU Privacy Guard Manual: <a href="https://www.gnupg.org/documentation/manuals/gnupg/">https://www.gnupg.org/documentation/manuals/gnupg/</a>
-    <p>The GnuPG Smartcard HOWTO: <a href="https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html">https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html</a>
-    
-    <h4 id="contribution">Contribution</h4>
-    
-
-    <ul style="list-style-type:none;">
-      <li><a> Aydın Doyak   -- </a><a href="https://aydintd.net">aydintd.net</a></li>
-      <li><a> Barış Büyükakyol -- </a><a href="http://usrb.in">usrb.in </a><br></li>
-      <li><a id="cont-1"></a>Samed Beyribey[c1] -- <a href="https://eventualis.org">eventualis.org</a><br></li>
-      <li><a id="cont-2"></a>Arda Kılıçdağı[c2] -- <a href="https://arda.kilicdagi.com">arda.kilicdagi.com</a> </p></li>
-    </ul>  
-    
-    <h4 id="license">License</h4>
-    
-    <p>GNU Free Documentation License v1.3<br>
-    LICENSE text: <a href="https://www.gnu.org/licenses/fdl.html">eng</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">tr</a>
-      
-      Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.
+    <div class="container-fluid text-center p-3 my-3 border">
+      <div class="row">
+        <div class="col-lg" style="background:#edf4ff;">
+          <h5 id="#contribution"><strong>Contribution</strong></h4>
+          <ul class="list-group">
+            <li class="list-group-item"><a>Aydın Doyak</a><a href="https://aydintd.net"> -- aydintd.net</a></li>
+            <li class="list-group-item"><a>Barış Büyükakyol</a><a href="http://usrb.in"> -- usrb.in </a></li>
+            <li class="list-group-item"><a id="cont-1"></a>Samed Beyribey[c1]<a href="https://eventualis.org"> -- eventualis.org</a></li>
+            <li class="list-group-item"><a id="cont-2"></a>Arda Kılıçdağı[c2]<a href="https://arda.kilicdagi.com"> -- arda.kilicdagi.com</a></li>
+          </ul>
+          <h5 id="#reference"><strong>Reference</strong></h4>
+          <ul class="list-group">
+            <li class="list-group-item"><p id=ref1>The GnuPG Smartcard HOWTO - <a href="https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html">https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html</a></p>
+            <li class="list-group-item"><p id=ref2>The GNU Privacy Guard Manual - <a href="https://www.gnupg.org/documentation/manuals/gnupg/">https://www.gnupg.org/documentation/manuals/gnupg/</a></p>
+            <li class="list-group-item"><p id=fn:rng-tools">Random Number Generator Tools - <a href="https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html">https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html</a></p>
+          </ul>
+      </div>
+    </div>
   </body>
-  <p class="lead">
-    <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
-  
-  </main>
-  
-  <footer class="mastfoot mt-auto">
-    <div class="inner">
-      <p id=fn:rng-tools">Random Number Generator Tools <a href="https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html">https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html</a></p>
+  <footer id="sticky-footer" class="py-4 bg-light text-black-50">
+    <div class="container text-center">
+      <small><p id="license"> GNU Free Documentation License v1.3 <a href="https://www.gnu.org/licenses/fdl.html">[eng]</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">[tr]</a></p></small>
     </div>
   </footer>
-</div>
+</html>
