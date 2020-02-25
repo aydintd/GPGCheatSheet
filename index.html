@@ -67,33 +67,33 @@
             <pre><code>gpg --gen-key</code></pre>
             Used to create gpg key pairs.<br><br>
             <strong>note 0</strong> Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values.<br><br>
-            <pre><code>gpg --full-generate-key</code></pre><br>
+            <pre><code>gpg --full-generate-key</code></pre>
             Used to create the key pair with dialogs for all options.<br><br>
             <strong>note 0</strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.<br>
             It's been strongly advised that the expiration date also should not be set longer than 3 years.<br><br>
-            <pre><code>gpg -ao revocation.asc --gen-revoke key_id</code></pre><br>
+            <pre><code>gpg -ao revocation.asc --gen-revoke key_id</code></pre>
             Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directory for the specified key_id key.<br><br>
-            <pre><code>gpg --import revocation.asc </code></pre><br>
+            <pre><code>gpg --import revocation.asc </code></pre>
             Used to revoke the key by importing the revocation cert thus it's going to revoke the key which the revocated certificate's created for in the previous command.<br><br>
             <strong>note 0</strong> It's gonna be wise to store this revocation cert on an another media.<br>
             <strong>note 1</strong> If you ever revoked your key for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.<br>
             <strong>note 2</strong> If you use keyservers, you can send your revoked key to the keyserver back and make sure people aware the revocation.<br>
             For more info, refer: (<a href="#send-keys">–send-keys</a>)<br><br>
-            <h4 id="encrypt-decrypt">Encryption-Decryption<a id="encr-decry"></a></h4>
+            <h4 id="encrypt-decrypt">Encryption-Decryption<a id="encr-decry"></a></h4><br>
             <pre><code>gpg -e -u "x@domain.com" -r "y@domain.net" file</code></pre>
             Used to encrypt the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
-            export the encrypted file.gpg in the working directory.<br>
+            export the encrypted file.gpg in the working directory.<br><br>
             <pre><code>gpg -e -u "x@domain.net" -r "y@domain.com" --sign file</code></pre>
             Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
-            export the encrypted and signed file.gpg file in the working directory.
+            export the encrypted and signed file.gpg file in the working directory.<br><br>
             <pre><code>gpg -e -r y@domain.com --sign file</code></pre>
             Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <strong>default</strong> gpg key in your keychain
-            export the encrypted file in the working directory.
+            export the encrypted file in the working directory.<br><br>
             <pre><code>gpg -d file.gpg</code></pre>
-            Used to decrypt encrypted file.gpg and prints out the output. <br>
+            Used to decrypt encrypted file.gpg and prints out the output. <br><br>
             <pre><code>gpg -o file.ext -d file</code></pre>
-            Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br>
-          <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4>
+            Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br><br>
+            <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4><br>
             <pre><code>gpg --edit-key key_id</code></pre>
             Used to manipulate the key specified by the key_id. There are some example commands above which can be interactively instructed after running --edit-key. 
             After <strong><a href="#save">save</a>ing</strong> your modifications for the key, if there's any keyserver used, yours or any other's modified gpg key<br>
@@ -111,11 +111,11 @@
             <pre><code>addphoto</code></pre>
             Used to add an image to the specified key <br><br>
             <strong>note 3</strong> Image must be in jpg format and image size must not be bigger than 240x288px  <br>
-            <strong>note 4</strong> There's no guarantee that every keyserver recognizes this form of keys. <br>
+            <strong>note 4</strong> There's no guarantee that every keyserver recognizes this form of keys. <br><br>
             <pre><code>showphoto</code></pre>
-            Used to display the image if any attached to the key. <br>
+            Used to display the image if any attached to the key. <br><br>
             <a id="save"></a><pre><code>save</code></pre>
-            Used to save the changes and exit. <br>
+            Used to save the changes and exit. <br><br>
             <pre><code>quit</code></pre>
             Used to escape without saving. <br>
           </p>
@@ -124,20 +124,20 @@
           <h4 id="key-mgmt">Key Management<a id="key-management"></a></h4>
           <p class="monospace"> 
             <pre><code>gpg --list-secret-keys</code></pre>
-            Used to list registered gpg secret keys and details such as key id, expiration date etc. <br><br>
-            <pre><code>gpg --list-keys</code></pre>
-            Used to list registered gpg public keys and details such as key id, expiration date etc. <br><br>
-            <pre><code>gpg --fingerprint</code></pre>
-            Used to list the fingerprint information of the imported keys. <br><br>
-            <pre><code>gpg --delete-secret-key "username/key_id"</code></pre>
+            Used to list registered gpg secret keys and details such as key id, expiration date.<br><br>
+            <pre><code>gpg --list-keys</code></pre><br>
+            Used to list registered gpg public keys and details such as key id, expiration date.<br><br>
+            <pre><code>gpg --fingerprint</code></pre><br>
+            Used to list the fingerprint information of the imported keys.<br><br>
+            <pre><code>gpg --delete-secret-key "username/key_id"</code></pre><br>
             Used to delete the secret key and the defined username by specifying the key_id. <br><br>
-            <pre><code>gpg --delete-key "username"</code></pre>
+            <pre><code>gpg --delete-key "username"</code></pre><br>
             Used to delete the public key associated with the username.<br><br>
             <strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
             Otherwise; you should first delete the secret key prior deleting the public key.<br><br>
-            <pre><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></pre>
+            <pre><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></pre><br>
             Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory. <br><br>
-            <pre><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></pre>
+            <pre><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></pre><br>
             Used to export the secret key in an ASCII-armored and encrypted "private-key.gpg.asc" file in the working directory.
             The command before pipe "|" used to print secret-key to the screen. <br><br>
             <pre><code>gpg -ao public-key.asc --export "key_id"</code></pre>
@@ -149,28 +149,28 @@
             <strong>note 0</strong> The other end of key exchange is importing other people's public keys to your keyring — is just as simple as exporting keys as described before. <br>
             <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.<br><br>
             <pre><code>gpg --list-secret-keys</code></pre>
-            Used to list registered gpg secret keys and details such as key id, expiration date etc. <br>
+            Used to list registered gpg secret keys and details such as key id, expiration date.<br><br>
             <pre><code>gpg --list-keys</code></pre>
-            Used to list registered gpg public keys and details such as key id, expiration date etc. <br>
+            Used to list registered gpg public keys and details such as key id, expiration date.<br><br>
             <pre><code>gpg --fingerprint</code></pre>
-            Used to list the fingerprint information of the imported keys. <br>
+            Used to list the fingerprint information of the imported keys.<br><br>
             <pre><code>gpg --delete-secret-key "username/key_id"</code></pre>
-            Used to delete the secret key and the defined username by specifying the key_id.  <br>
+            Used to delete the secret key and the defined username by specifying the key_id.<br><br>
             <pre><code>gpg --delete-key "username"</code></pre>
             Used to delete the public key associated with the username.<br><br>
             <strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
-            Otherwise; you should first delete the secret key prior deleting the public key.  <br>
+            Otherwise; you should first delete the secret key prior deleting the public key.<br><br>
             <pre><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></pre>
-            Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory. <br>
+            Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory.<br><br>
             <pre><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></pre>
             Used to export the secret key in an ASCII-armored and encrypted "private-key.gpg.asc" file in the working directory.
-            the command before pipe "|" used to print secret-key to the screen. <br>
+            the command before pipe "|" used to print secret-key to the screen.<br><br>
             <pre><code>gpg -ao public-key.asc --export "key_id"</code></pre>
-            Used to export the public key in an ASCII-armored "public-key.asc" file in the working directory. <br>
+            Used to export the public key in an ASCII-armored "public-key.asc" file in the working director.<br><br>
             <pre><code>gpg --allow-secret-key-import --import secret-key.asc</code></pre>
-            Used to import a secret key. <br>
+            Used to import a secret key.<br><br>
             <pre><code>gpg --import public-key.asc</code></pre>
-            Used to import a public key. <br>
+            Used to import a public key.<br><br>
             <strong>note 0</strong> The other end of key exchange is importing other people's public keys to your keyring — is just as simple as exporting keys as described before. <br>
             <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.<br>
           </p>
@@ -179,32 +179,25 @@
           <h4 id="sign-ops">Sign Operations<a id="sign"></a></h4>
             <p class="monospace">
             <pre><code> gpg --clearsign message</code></pre>
-            Used to print the signature into the file "message" and export the message.asc ASCII-armored PGP signed file.
+            Used to print the signature into the file "message" and export the message.asc ASCII-armored PGP signed file.<br><br>
             <pre><code>gpg --verify message.asc</code></pre>
-            Used to output signature owner, date, key id and verification info used on message.txt.asc file ASCII-armored PGP signed file. <br>
+            Used to output signature owner, date, key id and verification info used on message.txt.asc file ASCII-armored PGP signed file.x <br><br>
             <pre><code>gpg --armor --detach-sign file</code></pre>
-            Used to sign file, export the file.asc ASCII-armored file in the working directory. 
+            Used to sign file, export the file.asc ASCII-armored file in the working directory.<br><br>
             <pre><code>gpg --detach-sign file</code></pre>
-            Used to sign file and export file.sign data file in the working directory.
-            <pre><code>gpg -d file.sign</pre></code>
-            <pre><code>
-            Used to output signature owner, date, key_id and verification info.
-            gpg: assuming signed data in 'file.txt.sign'
-            gpg: Signature made Sun 23 Feb 2020 09:27:48 PM UTC
-            gpg:                using RSA key F7EFBA655EA35506008E0F836B73D524F084D782
-            gpg: Good signature from "Aydin Doyak (aydintd;https://aydintd.net) <info@aydintd.net>" [ultimate]</code></pre> 
+            Used to sign file and export file.sign data file in the working directory.<br><br>
             <pre><code>gpg --output file.sig --sign file</code></pre>
             Used to sign the file and export the signed file.sig in the working directory.<br><br>
-            <pre><code>gpg --output file --decrypt file.sig</code></pre><br>
+            <pre><code>gpg --output file --decrypt file.sig</code></pre>
             Used to output the signature owner, date, key id, verification info and export the signed "file" in the working directory. <br><br>
-            <h4 id="key-server">Key Server<a id="keyserver"></a></h4>
+            <h4 id="key-server">Key Server<a id="keyserver"></a></h4><br>
             <a id="send-keys"></a><pre><code>gpg --keyserver server_url --send-keys key_id</code></pre>
-            Used to send the key_id gpg public key to the server_url keyserver. <br>
+            Used to send the key_id gpg public key to the server_url keyserver. <br><br>
             <pre><code>gpg --keyserver server_url --recv-key key_id</code></pre>
-            Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
+            Used to retrieve the key_id gpg public key from the specified server_url keyserver.<br><br>
             <pre><code>gpg --keyserver server_url  --search-keys search-parameter</code></pre>
-            Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br><br>
-            <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
+            Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches.<br><br>
+            <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4><br>
             <pre><code>gpg --card-edit</code></pre>
             Used to manipulate smart cards connected to the device. (yubikey, etc) 
             <strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br><br>
