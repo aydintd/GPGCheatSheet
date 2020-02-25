@@ -1,437 +1,323 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Aydin Doyak">
+    <meta name="description" content="GNU Privacy Guard CheatSheet">
 
-<head>
-	<title>GnuPG CheatSheet</title>
-	<meta http-equiv="content-type" content="text/html;charset=utf-8" />
-  <meta name="viewport" content="width=device-width">
-  <meta name="author" content="Aydin Doyak">
-  <meta name="description" content="GNU Privacy Guard CheatSheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <title>GnuPG CheatSheet</title>
+
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-md navbar-light bg-light monospace">
+        <a class="navbar-brand" href="#">GnuPG CheatSheet</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="#collapsibleNavbar">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="#keypair-gen">Key Pair Generation</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#key-mgmt">Key Management</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#sign-ops">Sign Operations</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#encrypt-decrypt">Encryption/Decryption</a> 
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#keyserver">Key Servers</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#key-edit">Key Editing</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#tips">Tips</a>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+            FAQ
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdownitem" href="#contribution">Contribution</a><br>
+            <a class="dropdownitem" href="#license">License</a><br>
+            <a class="dropdownitem" href="#reference">Reference</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </head>
+  <body>
+    <div class="container-fluid p-5">
+      <div class="row">
+        <div class="col-sm-4">
+          <h4 id="keypair-gen">Keypair Generation</h4>
+          <p class="monospace">
+            <pre><code>gpg --gen-key</code></pre><br>
+            Used to create gpg key pairs.<br><br>
+            <strong>note 0</strong> Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values.<br><br>
+            <pre><code>gpg --full-generate-key</code></pre><br>
+            Used to create the key pair with dialogs for all options.<br><br>
+            <strong>note 0</strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.<br>
+            It's been strongly advised that the expiration date also should not be set longer than 3 years.<br><br>
+            <pre><code>gpg -ao revocation.asc --gen-revoke key_id</code></pre><br>
+            Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directory for the specified key_id key.<br><br>
+            <pre><code>gpg --import revocation.asc </code></pre><br>
+            Used to revoke the key by importing the revocation cert thus it's going to revoke the key which the revocated certificate's created for in the previous command.<br><br>
+            <strong>note 0</strong> It's gonna be wise to store this revocation cert on an another media.<br>
+            <strong>note 1</strong> If you ever revoked your key for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.<br>
+            <strong>note 2</strong> If you use keyservers, you can send your revoked key to the keyserver back and make sure people aware the revocation.<br>
+            For more info, refer: (<a href="#send-keys">–send-keys</a>)<br><br>
+            <h4 id="encrypt-decrypt">Encryption-Decryption<a id="encr-decry"></a></h4>
+            <pre><code>gpg -e -u "x@domain.com" -r "y@domain.net" file</code></pre>
+            Used to encrypt the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
+            export the encrypted file.gpg in the working directory.<br>
+            <pre><code>gpg -e -u "x@domain.net" -r "y@domain.com" --sign file</code></pre>
+            Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
+            export the encrypted and signed file.gpg file in the working directory.
+            <pre><code>gpg -e -r y@domain.com --sign file</code></pre>
+            Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <strong>default</strong> gpg key in your keychain
+            export the encrypted file in the working directory.
+            <pre><code>gpg -d file.gpg</code></pre>
+            Used to decrypt encrypted file.gpg and prints out the output. <br>
+            <pre><code>gpg -o file.ext -d file</code></pre>
+            Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br>
+          </p>
+          <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4>
+            <pre><code>gpg --edit-key key_id</code></pre>
+            Used to manipulate the key specified by the key_id. There are some example commands above which can be interactively instructed after running --edit-key. 
+            After <strong><a href="#save">save</a>ing</strong> your modifications for the key, if there's any keyserver used, yours or any other's modified gpg key<br>
+            uld be encouraged to <a href="#send-keys">–send-keys</a> back to keyserver again to inform people about the newly changes. <br><br>
+            <pre><code>passwd</code></pre>
+            Used to change the passphrase for the specified key. <br><br>
+            <pre><code>sign</code></pre> 
+            Used to sign gpg public keys<br><br>
+            <strong>note 0</strong> Keys you sign can be your own key, another gpg key from your keyring or someone else's public key. If you sign someone else's key,<a href="#save">save</a> it and (<a href="#send-keys">–send-keys</a>) back to a keyserver. Because;<br>
+            <strong>note 1</strong> This sign procedure will be visible in the key details in case of public keyserver querying. So after saving and sending the key back to a keyserver,
+            you will be considered as you accept the owner of the key who has the defined e-mail address, in other words; real person who has access to the defined email address in the gpg key details.<br>
+            <strong>note 2</strong> Consider whose key to sign and whose don't. It's highly discouraged to sign a key which you do not know the owner in real life. Do not trust any presence claim in the outer wild.<br><br>
+            <pre><code>expire</code></pre>
+            Used to reset expiration date for the specified key.<br><br>
+            <pre><code>addphoto</code></pre>
+            Used to add an image to the specified key <br><br>
+            <strong>note 3</strong> Image must be in jpg format and image size must not be bigger than 240x288px  <br>
+            <strong>note 4</strong> There's no guarantee that every keyserver recognizes this form of keys. <br>
+            <pre><code>showphoto</code></pre>
+            Used to display the image if any attached to the key. <br>
+            <a id="save"></a><pre><code>save</code></pre>
+            Used to save the changes and exit. <br>
+            <pre><code>quit</code></pre>
+            Used to escape without saving. <br>
+        </div>
+        <div class="col-sm-4">
+          <h4 id="key-mgmt">Key Management<a id="key-management"></a></h4>
+          <p class="monospace"> 
+            <pre><code>gpg --list-secret-keys</code></pre>
+            Used to list registered gpg secret keys and details such as key id, expiration date etc. <br><br>
+            <pre><code>gpg --list-keys</code></pre>
+            Used to list registered gpg public keys and details such as key id, expiration date etc. <br><br>
+            <pre><code>gpg --fingerprint</code></pre>
+            Used to list the fingerprint information of the imported keys. <br><br>
+            <pre><code>gpg --delete-secret-key "username/key_id"</code></pre>
+            Used to delete the secret key and the defined username by specifying the key_id. <br><br>
+            <pre><code>gpg --delete-key "username"</code></pre>
+            Used to delete the public key associated with the username.<br><br>
+            <strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
+            Otherwise; you should first delete the secret key prior deleting the public key.<br><br>
+            <pre><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></pre>
+            Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory. <br><br>
+            <pre><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></pre>
+            Used to export the secret key in an ASCII-armored and encrypted "private-key.gpg.asc" file in the working directory.
+            The command before pipe "|" used to print secret-key to the screen. <br><br>
+            <pre><code>gpg -ao public-key.asc --export "key_id"</code></pre>
+            Used to export the public key in an ASCII-armored "public-key.asc" file in the working directory.<br><br>
+            <pre><code>gpg --allow-secret-key-import --import secret-key.asc</code></pre>
+            Used to import a secret key. <br><br>
+            <pre><code>gpg --import public-key.asc</code></pre>
+            Used to import a public key. <br><br>
+            <strong>note 0</strong> The other end of key exchange is importing other people's public keys to your keyring — is just as simple as exporting keys as described before. <br>
+            <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.<br><br>
+            <pre><code>gpg --list-secret-keys</code></pre>
+            Used to list registered gpg secret keys and details such as key id, expiration date etc. <br>
+            <pre><code>gpg --list-keys</code></pre>
+            Used to list registered gpg public keys and details such as key id, expiration date etc. <br>
+            <pre><code>gpg --fingerprint</code></pre>
+            Used to list the fingerprint information of the imported keys. <br>
+            <pre><code>gpg --delete-secret-key "username/key_id"</code></pre>
+            Used to delete the secret key and the defined username by specifying the key_id.  <br>
+            <pre><code>gpg --delete-key "username"</code></pre>
+            Used to delete the public key associated with the username.<br><br>
+            <strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
+            Otherwise; you should first delete the secret key prior deleting the public key.  <br>
+            <pre><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></pre>
+            Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory. <br>
+            <pre><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></pre>
+            Used to export the secret key in an ASCII-armored and encrypted "private-key.gpg.asc" file in the working directory.
+            the command before pipe "|" used to print secret-key to the screen. <br>
+            <pre><code>gpg -ao public-key.asc --export "key_id"</code></pre>
+            Used to export the public key in an ASCII-armored "public-key.asc" file in the working directory. <br>
+            <pre><code>gpg --allow-secret-key-import --import secret-key.asc</code></pre>
+            Used to import a secret key. <br>
+            <pre><code>gpg --import public-key.asc</code></pre>
+            Used to import a public key. <br>
+            <strong>note 0</strong> The other end of key exchange is importing other people's public keys to your keyring — is just as simple as exporting keys as described before. <br>
+            <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.<br>
+          </p>
+        </div>
+        <div class="col-sm-4">
+          <h4 id="sign-ops">Sign Operations<a id="sign"></a></h4>
+            <p class="monospace">
+            <pre><code> gpg --clearsign message</code></pre>
+            Used to print the signature into the file "message" and export the message.asc ASCII-armored PGP signed file.
+            <pre><code>gpg --verify message.asc</code></pre>
+            Used to output signature owner, date, key id and verification info used on message.txt.asc file ASCII-armored PGP signed file. <br>
+            <pre><code>gpg --armor --detach-sign file</code></pre>
+            Used to sign file, export the file.asc ASCII-armored file in the working directory. 
+            <pre><code>gpg --detach-sign file</code></pre>
+            Used to sign file and export file.sign data file in the working directory.
+            <pre><code>gpg -d file.sign</pre></code>
+            <pre><code>
+            Used to output signature owner, date, key_id and verification info.
+            gpg: assuming signed data in 'file.txt.sign'
+            gpg: Signature made Sun 23 Feb 2020 09:27:48 PM UTC
+            gpg:                using RSA key F7EFBA655EA35506008E0F836B73D524F084D782
+            gpg: Good signature from "Aydin Doyak (aydintd;https://aydintd.net) <info@aydintd.net>" [ultimate]</code></pre> 
+            <pre><code>gpg --output file.sig --sign file</code></pre>
+            Used to sign the file and export the signed file.sig in the working directory.<br>
+            <pre><code>gpg --output file --decrypt file.sig</code></pre><br>
+            Used to output the signature owner, date, key id, verification info and export the signed "file" in the working directory. <br><br>
+            <h4 id="key-server">Key Server<a id="keyserver"></a></h4>
+              <a id="send-keys"></a><pre><code>gpg --keyserver server_url --send-keys key_id</code></pre>
+              Used to send the key_id gpg public key to the server_url keyserver. <br>
+              <pre><code>gpg --keyserver server_url --recv-key key_id</code></pre>
+              Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
+              <pre><code>gpg --keyserver server_url  --search-keys search-parameter</code></pre>
+              Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br>
+            </p>
+        </div>
+      </div>
+    </div>
     
-    <style type="text/css">
-        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-          font-size: 1.3em;
-	        font-weight: bold;
-          font-family: monospace;
-	        font-weight: bold;
-          text-align: center;
-          padding: 8px;
-          box-shadow: 5px 10px #888888;
-          background-color:#aaa;
-        }
-        body {
-          font-size: 1.04em;
-          margin-top: 3px;
-          margin-bottom: 3px;
-			    font-family: monospace;
-          width: 80%;
-          padding: 8px;
-			    margin: 0 auto;
-        }
-        .header {
-          font-weight: bold;
-        }
-        .topnav {
-          overflow: hidden;
-          background-color: #333;
-        }
+       <hr>
+    
+    
+    
+    <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
+    
+    <p><pre><code>gpg --card-edit</code></pre>
+    
+    <p> Used to manipulate smart cards connected to the device. (yubikey, etc) 
+    
+    <p><strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br>
+    ————————————————————————————
+    
+    <p><pre><code>admin</code></pre>
+    
+    <p>Used to get privileged by accessing the admin rights, it allows you to change "key connection, key owner etc." information inside the smart card menu.<br>
+    ————————————————————————————
+    <p><pre><code>name</code></pre>
+    
+    <p>Used to change the full name information for the owner of the smart card.<br>
+    ————————————————————————————
+    
+    <p><pre><code>url</code></pre>
+    
+    <p>Used to define key connection url path.<br>
+    ————————————————————————————
+    
+    <p><pre><code>generate</code></pre>
+    
+    <p>Used to generate a new key pair for the device.<br>
+    ————————————————————————————
+    
+    <p><pre><code>toggle</code></pre>
+    
+    <p>Used to toggle keys during listing phase. <br>
+    ————————————————————————————
+    
+    <p><pre><code>key number</code></pre>
+    
+    <p>Used to mark the gpg keys by numbering them in the smart card.<br>
+    ————————————————————————————
+    
+    <p><pre><code>keytocard</code></pre>
+    
+    <p>Used to transfer marked keys to the device. <br>
+    ————————————————————————————
+    
+    <p><pre><code>save</code></pre>
+    
+    <p>Used to save the changes and exit. <br>
+    ————————————————————————————
+    
+    <p><pre><code>quit</code></pre>
+    
+    <p>Escape. <br>
+    <hr>
+    
+    <h3 id="tips">Tips<a id="tips"></a></h3>
+    
+    <p>During key generation, rng-tools <a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">[1]</a> can be used to increase the entropy in your operating system. 
+    <p><strong>Example</strong> <br><br>
+    <pre><code>sudo rngd -r /dev/urandom</code></pre> <br><br>
+    ————————————————————————————
+    
+    <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to prevent specifiying the keyserver every time and encoding problems, 
+    below configuration can be added to <i>"~/.gnupg/gpg.conf"</i> for your UNIX user.
+    
+    <p><pre><code>utf8-strings</code></pre><br>
+    <pre><code>keyserver server_url</code></pre> <br><br>
+    ————————————————————————————
+    
+    <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to define a TTL value for your key's passphrase, below configuration can be added to <i>"~/.gnupg/gpg-agent.conf"</i> file in seconds.
+    
+    <p><pre><code>
+    default-cache-ttl 43200</code></pre> <br>
+    <pre><code>max-cache-ttl 43200</code></pre> <br><br>
+    
+    <hr>
+    
+    <h4 id="ref">Referance<a id="ref"></a></h4>
+    
+    <p>The GNU Privacy Guard Manual: <a href="https://www.gnupg.org/documentation/manuals/gnupg/">https://www.gnupg.org/documentation/manuals/gnupg/</a>
+    <p>The GnuPG Smartcard HOWTO: <a href="https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html">https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html</a>
+    
+    <h4 id="contribution">Contribution</h4>
+    
 
-        /* Style the topnav links */
-        .topnav a {
-          float: left;
-          display: block;
-          color: #f2f2f2;
-          text-align: center;
-          padding: 14px 14px;
-          text-decoration: none;
-        }
-
-        /* Change color on hover */
-        .topnav a:hover {
-          background-color: #ddd;
-          color: black;
-        }
-        /*
-        a.selflink {
-          color: black;
-          text-decoration: none;
-        }
-        /*
-        .row {
-          display: flex;
-        }
-        Create two equal columns that sits next to each other
-        .column {
-          flex: 50%;
-          padding: 10px;
-        }
-         */
-        @media screen and (max-width: 400px) {
-          .topnav a {
-            float: none;
-            width: 100%;
-          }
-        }
-	      code {
-         text-align: center;
-         border: 1px solid #ddd;
-			   font-family: monospace;
-         margin-top: -1px; /* Prevent double borders */
-         background-color: #f6f6f6;
-         padding: 1px;
-	      }
-        .wrap { 
-          width: 62%; 
-          margin: 0 auto; 
-        }
-    </style>
-</head>
-<div class="wrap">
-  <h1 id="gnupg-cheatsheet">GnuPG CheatSheet</h1>
-  
-  <div class="topnav">
-    <a href="#keypair-gen">Key Pair Generation</a> 
-    <a href="#key-mgmt">Key Management</a> 
-    <a href="#sign-ops">Sign Operations</a> 
-    <a href="#encrypt-decrypt">Encryption/Decryption</a> 
-    <a href="#keyserver">Key Servers</a>
-    <a href="#key-edit">Key Editing</a>
-    <a href="#smart-cards">Smart Cards</a>
-    <a href="#tips">Tips</a>
-    <a href="#contribution" style="float:right">Contribution</a>
-    <a href="#license" style="float:right">License</a>
-    <a href="#ref" style="float:right">Reference</a>
-  </div>
-
-  <h4 id="keypair-gen">Keypair Generation</h4>
-  
-  <p><code>gpg --gen-key</code></p>
-  
-  <p>Used to create gpg key pairs.</p>
-  
-  <p><strong>note 0</strong> Beyond this point; GnuPG will list some instructions on how the key pair is going to be created with some of the default values.</p>
-  
-  <p><code>gpg --full-generate-key</code></p>
-  
-  <p>Used to create the key pair with dialogs for all options.</p> 
-  
-  <p><strong>note 0</strong> Make sure to choose at least 4096 bit-long keys to be on the safer side.
-  It's been strongly advised that the expiration date also should not be set longer than 3 years.<br>
-  
-  ————————————————————————————</p>
-  
-  <p><code>gpg -ao revocation.asc --gen-revoke key_id</code></p>
-  
-  <p>Used to create ASCII-armored revocation certificate "revocation.asc" file on the working directory for the specified key_id key.<br>
-  
-  <p><code>gpg --import revocation.asc </code></p>
-  
-  <p>Used to revoke the key by importing the revocation cert thus it's going to revoke the key which the revocated certificate's created for in the previous command.</p>
-  
-  <p><strong>note 0</strong>: It's gonna be wise to store this revocation cert on an another media.<br>
-  <strong>note 1</strong>: If you ever revoked your key for a reason, people should know about it so they will not use your revoked public key for any privacy purposes.
-  If you use keyservers, you can send your revoked key to the keyserver back and make sure people aware the revocation.
-  For more info, refer: (<a href="#send-keys">–send-keys</a>)<br></p>
-  <hr>
-  
-  <h4 id="key-mgmt">Key Management<a id="key-management"></a></h4>
-  
-  <p><code>gpg --list-secret-keys</code></p>
-  
-  <p>Used to list registered gpg secret keys and details such as key id, expiration date etc. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --list-keys</code></p>
-  
-  <p>Used to list registered gpg public keys and details such as key id, expiration date etc. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --fingerprint</code></p>
-  
-  <p>Used to list the fingerprint information of the imported keys. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --delete-secret-key "username/key_id"</code></p>
-  
-  <p>Used to delete the secret key and the defined username by specifying the key_id.  <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --delete-key "username"</code></p>
-  
-  <p>Used to delete the public key associated with the username.</p>
-  
-  <p><strong>note 0</strong> Above command can only be used against the username who does not have any secret keys imported. 
-  Otherwise; you should first delete the secret key prior deleting the public key.  <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg -ao secret-key.asc --export-secret-keys "key_id"</code></p>
-  
-  <p>Used key_id to export the secret-key in an ASCII-armored "secret-key.asc" file in the working directory. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg -a --export-secret-keys "key_id" | gpg -aco private-key.gpg.asc</code></p>
-  
-  <p>Used to export the secret key in an ASCII-armored and encrypted "private-key.gpg.asc" file in the working directory.
-  the command before pipe "|" used to print secret-key to the screen. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg -ao public-key.asc --export "key_id"</code></p>
-  
-  <p>Used to export the public key in an ASCII-armored "public-key.asc" file in the working directory. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --allow-secret-key-import --import secret-key.asc</code></p>
-  
-  <p> Used to import a secret key. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --import public-key.asc</code></p>
-  
-  <p>Used to import a public key. <br></p>
-  
-  <p><strong>note 0</strong> The other end of key exchange is importing other people's public keys to your keyring — is just as simple as exporting keys as described before. <br>
-  <strong>note 1</strong> When you import someone's public key, you can decrypt their email and check their digital signature against their public key on your keyring.</p><br>
-  <hr>
-  
-  <h4 id="sign-ops">Sign Operations<a id="sign"></a></h4>
-  
-  <p><code> gpg --clearsign message</code></p>
-  
-  <p>Used to print the signature into the file "message" and export the message.asc ASCII-armored PGP signed file.</p>
-  
-  <p><code>gpg --verify message.asc</code></p>
-  
-  <p>Used to output signature owner, date, key id and verification info used on message.txt.asc file ASCII-armored PGP signed file. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --armor --detach-sign file</code></p>
-  
-  <p>Used to sign file, export the file.asc ASCII-armored file in the working directory. </p>
-  
-  ————————————————————————————</p>
-  
-  <p><code>gpg --detach-sign file</code></p>
-  
-  <p>Used to sign file and export file.sign data file in the working directory.</p>
-  
-  <p><code>gpg -d file.sign</code></p>
-  
-  <p>Used to output signature owner, date, key_id and verification info.<br> <br>
-    gpg: assuming signed data in 'file.txt.sign'<br>
-    gpg: Signature made Sun 23 Feb 2020 09:27:48 PM UTC<br>
-    gpg:                using RSA key F7EFBA655EA35506008E0F836B73D524F084D782<br>
-    gpg: Good signature from "Aydin Doyak (aydintd;https://aydintd.net) <info@aydintd.net>" [ultimate]<br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --output file.sig --sign file</code></p>
-  
-  <p>Used to sign the file and export the signed file.sig in the working directory.</p>
-  
-  <p><code>gpg --output file --decrypt file.sig</code></p>
-  
-  <p>Used to output the signature owner, date, key id, verification info and export the signed "file" in the working directory. <br></p>
-  <hr>
-  
-  <h4 id="encrypt-decrypt">Encryption-Decryption<a id="encr-decry"></a></h4>
-  
-  <p><code>gpg -e -u "x@domain.com" -r "y@domain.net" file</code></p>
-  
-  <p>Used to encrypt the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
-  and export the encrypted file.gpg in the working directory.<br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg -e -u "x@domain.net" -r "y@domain.com" --sign file</code></p>
-  
-  <p>Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <i>x@domain.com</i> owned gpg key
-  and export the encrypted and signed file.gpg file in the working directory.</p>
-  
-  <p><code>gpg -e -r y@domain.com --sign file</code></p>
-  
-  <p>Used to encrypt and sign the file for a recipient email address <i>y@domain.net</i> via using <strong>default</strong> gpg key in your keychain
-  and export the encrypted file in the working directory.</p>
-  
-  <p>————————————————————————————</p>
-  
-  <p><code>gpg -d file.gpg</code></p>
-  
-  <p>Used to decrypt encrypted file.gpg and prints out the output. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg -o file.ext -d file</code></p>
-  
-  <p>Used to decrypt dencrypted file.gpg and outputs to file.ext in the working directory.<br></p>
-  
-  <hr>
-  
-  <h4 id="key-server">Key Server<a id="keyserver"></a></h4>
-  
-  <p><a id="send-keys"></a><code>gpg --keyserver server_url --send-keys key_id</code></p>
-  
-  <p>Used to send the key_id gpg public key to the server_url keyserver. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --keyserver server_url --recv-key key_id</code></p>
-  
-  <p>Used to retrieve the key_id gpg public key from the specified server_url keyserver. <br>
-  ————————————————————————————</p>
-  
-  <p><code>gpg --keyserver server_url  --search-keys search-parameter</code></p>
-  
-  <p>Used to search server_url keyserver index and retrieve public keys list if any search-parameter matches. <br></p>
-  <hr>
-  
-  <h4 id="key-edit">Key Modifications<a id="edit-key"></a></h4>
-  
-  <p><code>gpg --edit-key key_id</code></p>
-  
-  <p>Used to manipulate the key specified by the key_id. There are some example commands above which can be interactively instructed after running --edit-key. </p>
-  
-  <p>After <strong><a href="#save">save</a>ing</strong> your modifications for the key, if there's any keyserver used, yours or any other's modified gpg key<br>
-  should be encouraged to <a href="#send-keys">–send-keys</a> back to keyserver again to inform people about the newly changes. <br><br>
-
-  ————————————————————————————</p>
-  
-  <p><code>passwd</code></p>
-  
-  <p>Used to change the passphrase for the specified key. <br>
-  ————————————————————————————</p>
-  
-  <p><code>sign</code> </p>
-  
-  <p>Used to sign gpg public keys</p>
-  
- <p>
- <strong>note 0</strong> Keys you sign can be your own key, another gpg key from your keyring or someone else's public key. If you sign someone else's key,<a href="#save">save</a> it and (<a href="#send-keys">–send-keys</a>) back to a keyserver,<br>
- <strong>note 1</strong> This sign procedure will be visible in the key details in case of public keyserver querying. So after saving and sending the key back to a keyserver,
-  you will be considered as you accept the owner of the key who has the defined e-mail address, in other words; real person who has access to the defined email address in the gpg key details.<br>
- <strong>note 2</strong> Consider whose key to sign and whose don't. It's highly discouraged to sign a key which you do not know the owner in real life. Do not trust any presence claim in the outer wild.</p>
-  ————————————————————————————</p>
-  
-  <p><code>expire</code></p>
-  
-  <p>Used to reset expiration date for the specified key.<br>
-  ————————————————————————————</p>
-  
-  <p><code>addphoto</code></p>
-  
-  <p>Used to add an image to the specified key</p>
-  
-  <p><strong>note 0</strong> Image must be in jpg format and image size must not be bigger than 240x288px  <br>
-  <strong>note 1</strong> There's no guarantee that every keyserver recognizes this form of keys. <br>
-  ————————————————————————————</p>
-  
-  <p><code>showphoto</code></p>
-  
-  <p>Used to display the image if any attached to the key. <br>
-  ————————————————————————————</p>
-  
-  <p><a id="save"></a><code>save</code></p>
-  
-  <p>Used to save the changes and exit. <br>
-  ————————————————————————————</p>
-  
-  <p><code>quit</code></p>
-  
-  <p>Used to escape without saving. <br></p>
-  <hr>
-  
-  
-  
-  <h4 id="smart-cards">Smart Cards[<a href="#cont-2" title="Arda Kılıçdağı">c2</a>] <a id="smart-cards"></a></h4>
-  
-  <p><code>gpg --card-edit</code></p>
-  
-  <p> Used to manipulate smart cards connected to the device. (yubikey, etc) </p>
-  
-  <p><strong>note 0 </strong>Beyond this point, gpg interacts with the device and following commands can be applied to change smart card's behaviour.<br>
-  ————————————————————————————</p>
-  
-  <p><code>admin</code></p>
-  
-  <p>Used to get privileged by accessing the admin rights, it allows you to change "key connection, key owner etc." information inside the smart card menu.<br>
-  ————————————————————————————</p>
-  <p><code>name</code></p>
-  
-  <p>Used to change the full name information for the owner of the smart card.<br>
-  ————————————————————————————</p>
-  
-  <p><code>url</code></p>
-  
-  <p>Used to define key connection url path.<br>
-  ————————————————————————————</p>
-  
-  <p><code>generate</code></p>
-  
-  <p>Used to generate a new key pair for the device.<br>
-  ————————————————————————————</p>
-  
-  <p><code>toggle</code></p>
-  
-  <p>Used to toggle keys during listing phase. <br>
-  ————————————————————————————</p>
-  
-  <p><code>key number</code></p>
-  
-  <p>Used to mark the gpg keys by numbering them in the smart card.<br></p>
-  ————————————————————————————</p>
-  
-  <p><code>keytocard</code></p>
-  
-  <p>Used to transfer marked keys to the device. <br>
-  ————————————————————————————</p>
-  
-  <p><code>save</code></p>
-  
-  <p>Used to save the changes and exit. <br>
-  ————————————————————————————</p>
-  
-  <p><code>quit</code></p>
-  
-  <p>Escape. <br></p>
-  <hr>
-  
-  <h3 id="tips">Tips<a id="tips"></a></h3>
-  
-  <p>During key generation, rng-tools <a href="#fn:rng-tools" id="fnref:rng-tools" title="See footnote" class="footnote">[1]</a> can be used to increase the entropy in your operating system. </p>
-  <p><strong>Example</strong> <br><br>
-  <code>sudo rngd -r /dev/urandom</code> <br><br>
-  ————————————————————————————</p>
-  
-  <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to prevent specifiying the keyserver every time and encoding problems, 
-  below configuration can be added to <i>"~/.gnupg/gpg.conf"</i> for your UNIX user.</p>
-  
-  <p><code>utf8-strings</code><br>
-  <code>keyserver server_url</code> <br><br>
-  ————————————————————————————</p>
-  
-  <p>[<a href="#cont-1" title="Samed Beyribey">c1</a>]In order to define a TTL value for your key's passphrase, below configuration can be added to <i>"~/.gnupg/gpg-agent.conf"</i> file in seconds.</p>
-  
-  <p><code>
-  default-cache-ttl 43200</code> <br>
-  <code>max-cache-ttl 43200</code> <br><br>
-  </p>
-  <hr>
-  
-  <h4 id="ref">Referance<a id="ref"></a></h4>
-  
-  <p>The GNU Privacy Guard Manual: <a href="https://www.gnupg.org/documentation/manuals/gnupg/">https://www.gnupg.org/documentation/manuals/gnupg/</a></p>
-  <p>The GnuPG Smartcard HOWTO: <a href="https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html">https://www.gnupg.org/howtos/card-howto/en/smartcard-howto.html</a></p>
-  
-  <h4 id="contribution">Contribution</h4>
-  
-
-  <ul style="list-style-type:none;">
-    <li><a> Aydın Doyak   -- </a><a href="https://aydintd.net">aydintd.net</a></li>
-    <li><a> Barış Büyükakyol -- </a><a href="http://usrb.in">usrb.in </a><br></li>
-    <li><a id="cont-1"></a>Samed Beyribey[c1] -- <a href="https://eventualis.org">eventualis.org</a><br></li>
-    <li><a id="cont-2"></a>Arda Kılıçdağı[c2] -- <a href="https://arda.kilicdagi.com">arda.kilicdagi.com</a> </p></li>
-  </ul>  
-  
-  <h4 id="license">License</h4>
-  
-  <p>GNU Free Documentation License v1.3<br>
-  LICENSE text: <a href="https://www.gnu.org/licenses/fdl.html">eng</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">tr</a></p>
-  
-  <div class="footnotes"><hr><ol><li id="fn:rng-tools">Random Number Generator Tools <a href="https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html">https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html</a> <a href="#fnref:rng-tools" title="Return to article" class="reversefootnote">↩</a></li></ol></div>
+    <ul style="list-style-type:none;">
+      <li><a> Aydın Doyak   -- </a><a href="https://aydintd.net">aydintd.net</a></li>
+      <li><a> Barış Büyükakyol -- </a><a href="http://usrb.in">usrb.in </a><br></li>
+      <li><a id="cont-1"></a>Samed Beyribey[c1] -- <a href="https://eventualis.org">eventualis.org</a><br></li>
+      <li><a id="cont-2"></a>Arda Kılıçdağı[c2] -- <a href="https://arda.kilicdagi.com">arda.kilicdagi.com</a> </p></li>
+    </ul>  
+    
+    <h4 id="license">License</h4>
+    
+    <p>GNU Free Documentation License v1.3<br>
+    LICENSE text: <a href="https://www.gnu.org/licenses/fdl.html">eng</a> / <a href="http://ozgurlisanslar.org.tr/fdl/gnu-free-documentation-license-version-1-3/">tr</a>
+      
+      Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.
+  </body>
+  <p class="lead">
+    <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+  
+  </main>
+  
+  <footer class="mastfoot mt-auto">
+    <div class="inner">
+      <p id=fn:rng-tools">Random Number Generator Tools <a href="https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html">https://www.gnu.org/software/hurd/user/tlecarrour/rng-tools.html</a></p>
+    </div>
+  </footer>
 </div>
